@@ -1,120 +1,139 @@
 <!DOCTYPE html>
 <html lang="ja">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="GENERATOR" content="JustSystems Homepage Builder Version 23.0.1.0 for Windows">
-<title>ST経済研究所</title>
+<meta charset="utf-8">
+<title>gallery11 VR美術館</title>
 
 <style>
-<!--
-
 body{
-    background-color: #003366;
-    color: white;
-    margin: 0;
-    font-family: "Hiragino Kaku Gothic ProN", Meiryo, sans-serif;
-    text-align: center;
+margin:0;
+overflow:hidden;
+font-family:sans-serif;
 }
 
-header{
-    padding: 20px;
+#title{
+position:absolute;
+top:20px;
+width:100%;
+text-align:center;
+color:white;
+font-size:26px;
 }
-
-nav{
-    margin: 20px 0;
-}
-
-nav a{
-    display: inline-block;
-    margin: 10px;
-    padding: 10px 20px;
-    background-color: #0055aa;
-    color: white;
-    text-decoration: none;
-    border-radius: 5px;
-    font-weight: bold;
-}
-
-nav a:hover{
-    background-color: #0077dd;
-}
-
-.main-image img{
-    max-width: 100%;
-    height: auto;
-}
-
-.section{
-    padding: 30px 15px;
-    max-width: 900px;
-    margin: auto;
-}
-
-h1{
-    font-size: 2em;
-}
-
-h2{
-    font-size: 1.5em;
-}
-
-footer{
-    margin-top: 40px;
-    padding: 15px;
-    font-size: 0.9em;
-    background-color: #002244;
-}
--->
 </style>
+
 </head>
 
 <body>
 
-<header>
-    <img src="logo111.gif" alt="ST経済研究所ロゴ" width="341" height="56">
-</header>
+<div id="title">gallery11 VR美術館</div>
 
-<!-- ✅ ここがリンク部分 -->
-<nav>
-    <a href="index.html">概要</a>
-<a href="organization.html">組織図</a>
-<a href="events.html">開催予定のイベント</a>
-<a href="contact.html">問い合わせ</a>
-<a href="other.html">その他</a>
-</nav>
+<script type="module">
 
-<div class="main-image">
-    <img src="img20220203_13065316.jpg" alt="ST経済研究所">
-</div>
+import * as THREE from 'https://unpkg.com/three@0.160.0/build/three.module.js';
+import { VRButton } from 'https://unpkg.com/three@0.160.0/examples/jsm/webxr/VRButton.js';
+import { PointerLockControls } from 'https://unpkg.com/three@0.160.0/examples/jsm/controls/PointerLockControls.js';
 
-<div class="section">
-    <h1>概要</h1>
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x202020);
 
-    <h2>当団体の特徴</h2>
+const camera = new THREE.PerspectiveCamera(75,window.innerWidth/window.innerHeight,0.1,1000);
 
-    <p>
-    ST経済研究所では、経済に関する研究を行っています。<br>
-    世界経済は激動の時代を迎えております。<br>
-    当研究所では、文献研究によって緻密な研究を行っていきたいと考えております。
-    </p>
+const renderer = new THREE.WebGLRenderer({antialias:true});
+renderer.setSize(window.innerWidth,window.innerHeight);
+renderer.xr.enabled=true;
 
-    <p style="margin-top:30px; font-size:1.2em;">
-    「歴史家の仕事は、ただ本当の事実を示すだけである」<br>
-    歴史家 レオポルト・フォン・ランケ
-    </p>
+document.body.appendChild(renderer.domElement);
+document.body.appendChild(VRButton.createButton(renderer));
 
-    <p style="margin-top:30px;">
-    <strong>お問い合わせ</strong><br>
-    <a href="mailto:satotakaaki2historien@gmail.com" style="color:#ffffcc;">
-        satotakaaki2historien@gmail.com
-    </a>
-    </p>
-</div>
+const light = new THREE.HemisphereLight(0xffffff,0x444444,1.2);
+scene.add(light);
 
-<footer>
-    Copyright &copy; 2026 ST経済研究所 All Rights Reserved
-</footer>
+camera.position.set(0,1.6,5);
+
+const controls = new PointerLockControls(camera,document.body);
+
+document.body.addEventListener("click",()=>{
+controls.lock();
+});
+
+const keys={};
+
+document.addEventListener("keydown",(e)=>keys[e.code]=true);
+document.addEventListener("keyup",(e)=>keys[e.code]=false);
+
+function move(){
+
+const speed=0.08;
+
+if(keys["KeyW"]) controls.moveForward(speed);
+if(keys["KeyS"]) controls.moveForward(-speed);
+if(keys["KeyA"]) controls.moveRight(-speed);
+if(keys["KeyD"]) controls.moveRight(speed);
+
+}
+
+const floor = new THREE.Mesh(
+new THREE.PlaneGeometry(40,40),
+new THREE.MeshStandardMaterial({color:0x888888})
+);
+
+floor.rotation.x=-Math.PI/2;
+scene.add(floor);
+
+function wall(x,z,rot){
+
+const mesh = new THREE.Mesh(
+new THREE.BoxGeometry(10,3,0.2),
+new THREE.MeshStandardMaterial({color:0xffffff})
+);
+
+mesh.position.set(x,1.5,z);
+mesh.rotation.y=rot;
+
+scene.add(mesh);
+
+}
+
+wall(0,-8,0);
+wall(-8,0,Math.PI/2);
+wall(8,0,Math.PI/2);
+
+const loader=new THREE.TextureLoader();
+
+function artwork(file,x,y,z,rot){
+
+const tex=loader.load(file);
+
+const mesh=new THREE.Mesh(
+new THREE.PlaneGeometry(2,1.5),
+new THREE.MeshBasicMaterial({map:tex})
+);
+
+mesh.position.set(x,y,z);
+mesh.rotation.y=rot;
+
+scene.add(mesh);
+
+}
+
+artwork("../DSCF12301.jpg",-3,1.5,-7.8,0);
+artwork("../DSCF12321.jpg",0,1.5,-7.8,0);
+artwork("../DSCF12341.jpg",3,1.5,-7.8,0);
+
+artwork("../DSCF12301.jpg",-7.8,1.5,-2,Math.PI/2);
+artwork("../DSCF12321.jpg",-7.8,1.5,2,Math.PI/2);
+
+artwork("../DSCF12341.jpg",7.8,1.5,-2,-Math.PI/2);
+artwork("../DSCF12301.jpg",7.8,1.5,2,-Math.PI/2);
+
+renderer.setAnimationLoop(()=>{
+
+move();
+renderer.render(scene,camera);
+
+});
+
+</script>
 
 </body>
 </html>
