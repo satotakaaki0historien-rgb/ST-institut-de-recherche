@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>VRでモナリザを見る</title>
+  <style>
+    body { margin: 0; overflow: hidden; }
+    canvas { display: block; }
+  </style>
+</head>
+<body>
+  <!-- Three.js 本体 -->
+  <script src="https://cdn.jsdelivr.net/npm/three@0.164.0/build/three.min.js"></script>
+  <!-- WebXR VRボタン -->
+  <script src="https://cdn.jsdelivr.net/npm/three@0.164.0/examples/jsm/webxr/XRButton.js"></script>
+
+  <script>
+    // シーンとカメラ
+    const scene = new THREE.Scene();
+    const camera = new THREE.PerspectiveCamera(70, window.innerWidth/window.innerHeight, 0.1, 10);
+    camera.position.z = 2;
+
+    // レンダラー
+    const renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer.setSize(window.innerWidth, window.innerHeight);
+    renderer.outputEncoding = THREE.sRGBEncoding;  // sRGB対応
+    renderer.xr.enabled = true;  // VR対応
+    document.body.appendChild(renderer.domElement);
+
+    // VRボタン
+    document.body.appendChild(THREE.XRButton.createButton(renderer));
+
+    // テクスチャ読み込み
+    const loader = new THREE.TextureLoader();
+    loader.load(
+      'https://satotakaaki0historien-rgb.github.io/ST-institut-de-recherche/vr/images/monalisa.jpg',
+      (texture) => {
+        texture.encoding = THREE.sRGBEncoding;
+        texture.flipY = false;
+
+        // ライト不要のマテリアル
+        const material = new THREE.MeshBasicMaterial({ map: texture });
+
+        // 平面ジオメトリに絵を貼る（縦横比に合わせる）
+        const geometry = new THREE.PlaneGeometry(1, 1.5);
+        const mesh = new THREE.Mesh(geometry, material);
+        scene.add(mesh);
+
+        // VRアニメーションループ
+        renderer.setAnimationLoop(() => {
+          renderer.render(scene, camera);
+        });
+      }
+    );
+
+    // ウィンドウリサイズ対応
+    window.addEventListener('resize', () => {
+      camera.aspect = window.innerWidth / window.innerHeight;
+      camera.updateProjectionMatrix();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+    });
+  </script>
+</body>
+</html>
