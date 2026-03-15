@@ -2,22 +2,17 @@
 <html lang="ja">
 <head>
 <meta charset="utf-8">
-<title>gallery11 VR美術館</title>
+<title>gallery11 VR</title>
 
 <style>
-body{
-margin:0;
-overflow:hidden;
-font-family:sans-serif;
-}
-
+body{margin:0;overflow:hidden;background:black;}
 #title{
 position:absolute;
 top:20px;
 width:100%;
 text-align:center;
 color:white;
-font-size:26px;
+font-size:24px;
 }
 </style>
 
@@ -25,113 +20,57 @@ font-size:26px;
 
 <body>
 
-<div id="title">gallery11 VR美術館</div>
+<div id="title">gallery11 VRギャラリー</div>
 
-<script type="module">
+<script src="https://cdn.jsdelivr.net/npm/three@0.152.2/build/three.min.js"></script>
 
-import * as THREE from 'https://unpkg.com/three@0.160.0/build/three.module.js';
-import { VRButton } from 'https://unpkg.com/three@0.160.0/examples/jsm/webxr/VRButton.js';
-import { PointerLockControls } from 'https://unpkg.com/three@0.160.0/examples/jsm/controls/PointerLockControls.js';
+<script>
 
 const scene = new THREE.Scene();
 scene.background = new THREE.Color(0x202020);
 
-const camera = new THREE.PerspectiveCamera(75,window.innerWidth/window.innerHeight,0.1,1000);
+const camera = new THREE.PerspectiveCamera(
+75,
+window.innerWidth/window.innerHeight,
+0.1,
+1000
+);
 
-const renderer = new THREE.WebGLRenderer({antialias:true});
+const renderer = new THREE.WebGLRenderer();
 renderer.setSize(window.innerWidth,window.innerHeight);
-renderer.xr.enabled=true;
-
 document.body.appendChild(renderer.domElement);
-document.body.appendChild(VRButton.createButton(renderer));
 
-const light = new THREE.HemisphereLight(0xffffff,0x444444,1.2);
+const light = new THREE.HemisphereLight(0xffffff,0x444444);
 scene.add(light);
 
-camera.position.set(0,1.6,5);
+camera.position.z = 5;
 
-const controls = new PointerLockControls(camera,document.body);
+const loader = new THREE.TextureLoader();
 
-document.body.addEventListener("click",()=>{
-controls.lock();
-});
+function picture(img,x){
 
-const keys={};
+const texture = loader.load(img);
 
-document.addEventListener("keydown",(e)=>keys[e.code]=true);
-document.addEventListener("keyup",(e)=>keys[e.code]=false);
+const geo = new THREE.PlaneGeometry(2,1.5);
+const mat = new THREE.MeshBasicMaterial({map:texture});
 
-function move(){
-
-const speed=0.08;
-
-if(keys["KeyW"]) controls.moveForward(speed);
-if(keys["KeyS"]) controls.moveForward(-speed);
-if(keys["KeyA"]) controls.moveRight(-speed);
-if(keys["KeyD"]) controls.moveRight(speed);
-
-}
-
-const floor = new THREE.Mesh(
-new THREE.PlaneGeometry(40,40),
-new THREE.MeshStandardMaterial({color:0x888888})
-);
-
-floor.rotation.x=-Math.PI/2;
-scene.add(floor);
-
-function wall(x,z,rot){
-
-const mesh = new THREE.Mesh(
-new THREE.BoxGeometry(10,3,0.2),
-new THREE.MeshStandardMaterial({color:0xffffff})
-);
-
-mesh.position.set(x,1.5,z);
-mesh.rotation.y=rot;
+const mesh = new THREE.Mesh(geo,mat);
+mesh.position.set(x,0,-3);
 
 scene.add(mesh);
 
 }
 
-wall(0,-8,0);
-wall(-8,0,Math.PI/2);
-wall(8,0,Math.PI/2);
+picture("../DSCF12301.jpg",-3);
+picture("../DSCF12321.jpg",0);
+picture("../DSCF12341.jpg",3);
 
-const loader=new THREE.TextureLoader();
-
-function artwork(file,x,y,z,rot){
-
-const tex=loader.load(file);
-
-const mesh=new THREE.Mesh(
-new THREE.PlaneGeometry(2,1.5),
-new THREE.MeshBasicMaterial({map:tex})
-);
-
-mesh.position.set(x,y,z);
-mesh.rotation.y=rot;
-
-scene.add(mesh);
-
-}
-
-artwork("../DSCF12301.jpg",-3,1.5,-7.8,0);
-artwork("../DSCF12321.jpg",0,1.5,-7.8,0);
-artwork("../DSCF12341.jpg",3,1.5,-7.8,0);
-
-artwork("../DSCF12301.jpg",-7.8,1.5,-2,Math.PI/2);
-artwork("../DSCF12321.jpg",-7.8,1.5,2,Math.PI/2);
-
-artwork("../DSCF12341.jpg",7.8,1.5,-2,-Math.PI/2);
-artwork("../DSCF12301.jpg",7.8,1.5,2,-Math.PI/2);
-
-renderer.setAnimationLoop(()=>{
-
-move();
+function animate(){
+requestAnimationFrame(animate);
 renderer.render(scene,camera);
+}
 
-});
+animate();
 
 </script>
 
