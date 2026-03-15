@@ -1,78 +1,151 @@
 <!DOCTYPE html>
-<html lang="ja">
+<html>
 <head>
 <meta charset="utf-8">
-<title>gallery11 VR</title>
+<title>Gallery 11 VR Museum</title>
+
+<script src="https://aframe.io/releases/1.4.2/aframe.min.js"></script>
 
 <style>
-body{margin:0;overflow:hidden;background:black;}
-#title{
+body{
+margin:0;
+font-family:sans-serif;
+}
+.info{
 position:absolute;
-top:20px;
-width:100%;
-text-align:center;
-color:white;
-font-size:24px;
+top:10px;
+left:10px;
+background:white;
+padding:10px;
+border-radius:5px;
 }
 </style>
-
 </head>
 
 <body>
 
-<div id="title">gallery11 VRギャラリー</div>
+<div class="info">
+Gallery 11 VR Museum<br>
+WASDキーで移動 / マウスで視点
+</div>
 
-<script src="https://cdn.jsdelivr.net/npm/three@0.152.2/build/three.min.js"></script>
+<a-scene xr-mode-ui="enabled: true">
 
-<script>
+<!-- カメラ（歩行） -->
+<a-entity position="0 1.6 4">
 
-const scene = new THREE.Scene();
-scene.background = new THREE.Color(0x202020);
+<a-camera wasd-controls look-controls>
 
-const camera = new THREE.PerspectiveCamera(
-75,
-window.innerWidth/window.innerHeight,
-0.1,
-1000
-);
+<a-cursor></a-cursor>
 
-const renderer = new THREE.WebGLRenderer();
-renderer.setSize(window.innerWidth,window.innerHeight);
-document.body.appendChild(renderer.domElement);
+</a-camera>
 
-const light = new THREE.HemisphereLight(0xffffff,0x444444);
-scene.add(light);
+</a-entity>
 
-camera.position.z = 5;
+<!-- 床 -->
+<a-plane rotation="-90 0 0"
+width="20"
+height="20"
+color="#dddddd">
+</a-plane>
 
-const loader = new THREE.TextureLoader();
+<!-- 壁 -->
+<a-box position="0 2 -8" width="16" height="4" depth="0.2" color="#ffffff"></a-box>
+<a-box position="-8 2 0" width="0.2" height="4" depth="16" color="#ffffff"></a-box>
+<a-box position="8 2 0" width="0.2" height="4" depth="16" color="#ffffff"></a-box>
 
-function picture(img,x){
+<!-- ===== 展示作品1 ===== -->
 
-const texture = loader.load(img);
+<a-plane
+position="-4 2 -7.8"
+width="2"
+height="1.5"
+src="https://upload.wikimedia.org/wikipedia/commons/6/6a/Mona_Lisa.jpg">
+</a-plane>
 
-const geo = new THREE.PlaneGeometry(2,1.5);
-const mat = new THREE.MeshBasicMaterial({map:texture});
+<a-text
+value="Mona Lisa\nLeonardo da Vinci"
+position="-4 0.8 -7.7"
+align="center"
+color="black">
+</a-text>
 
-const mesh = new THREE.Mesh(geo,mat);
-mesh.position.set(x,0,-3);
+<!-- ===== 展示作品2 ===== -->
 
-scene.add(mesh);
+<a-plane
+position="0 2 -7.8"
+width="2"
+height="1.5"
+src="https://upload.wikimedia.org/wikipedia/commons/0/0a/The_Great_Wave_off_Kanagawa.jpg">
+</a-plane>
 
-}
+<a-text
+value="Great Wave\nHokusai"
+position="0 0.8 -7.7"
+align="center"
+color="black">
+</a-text>
 
-picture("../DSCF12301.jpg",-3);
-picture("../DSCF12321.jpg",0);
-picture("../DSCF12341.jpg",3);
+<!-- ===== 展示作品3 ===== -->
 
-function animate(){
-requestAnimationFrame(animate);
-renderer.render(scene,camera);
-}
+<a-plane
+position="4 2 -7.8"
+width="2"
+height="1.5"
+src="https://upload.wikimedia.org/wikipedia/commons/5/56/Vincent_van_Gogh_-_Starry_Night_-_Google_Art_Project.jpg">
+</a-plane>
 
-animate();
+<a-text
+value="Starry Night\nVan Gogh"
+position="4 0.8 -7.7"
+align="center"
+color="black">
+</a-text>
 
-</script>
+<!-- ===== 2階フロア ===== -->
+
+<a-plane
+position="0 4 0"
+rotation="-90 0 0"
+width="10"
+height="10"
+color="#eeeeee">
+</a-plane>
+
+<a-box position="0 3 -4" width="10" height="0.2" depth="2" color="#cccccc"></a-box>
+
+<!-- 階段 -->
+
+<a-box position="-6 0.5 -2" width="2" height="1" depth="2" color="#999"></a-box>
+<a-box position="-6 1.5 -2" width="2" height="1" depth="2" color="#aaa"></a-box>
+<a-box position="-6 2.5 -2" width="2" height="1" depth="2" color="#bbb"></a-box>
+
+<!-- 2階展示 -->
+
+<a-plane
+position="0 5 -4"
+width="3"
+height="2"
+src="https://upload.wikimedia.org/wikipedia/commons/a/a1/Claude_Monet_-_Water_Lilies_-_Google_Art_Project.jpg">
+</a-plane>
+
+<a-text
+value="Water Lilies\nClaude Monet"
+position="0 3.8 -4"
+align="center"
+color="black">
+</a-text>
+
+<!-- 光 -->
+<a-light type="ambient" intensity="0.6"></a-light>
+
+<a-light
+type="point"
+position="0 4 0"
+intensity="1">
+</a-light>
+
+</a-scene>
 
 </body>
 </html>
