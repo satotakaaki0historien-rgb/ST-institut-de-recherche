@@ -15,11 +15,9 @@ top:10px;
 left:10px;
 background:white;
 padding:10px;
-border-radius:5px;
 font-family:sans-serif;
 }
 </style>
-
 </head>
 
 <body>
@@ -32,7 +30,7 @@ WASDキーで歩く / マウスで視点
 <a-scene>
 
 <!-- カメラ -->
-<a-entity position="0 1.6 10">
+<a-entity position="0 1.6 15">
 <a-camera wasd-controls look-controls>
 <a-cursor></a-cursor>
 </a-camera>
@@ -40,127 +38,138 @@ WASDキーで歩く / マウスで視点
 
 <!-- 床 -->
 <a-plane rotation="-90 0 0"
-width="60"
-height="60"
-color="#e6e6e6">
+width="80"
+height="80"
+color="#eeeeee">
 </a-plane>
 
 <!-- 天井 -->
 <a-plane rotation="90 0 0"
-position="0 10 0"
-width="60"
-height="60"
+position="0 12 0"
+width="80"
+height="80"
 color="#ffffff">
 </a-plane>
 
-<!-- 正面の壁 -->
+<!-- 正面壁 -->
 <a-box
-position="0 5 -20"
-width="40"
-height="10"
-depth="0.5"
+position="0 6 -30"
+width="60"
+height="12"
+depth="1"
 color="#ffffff">
 </a-box>
 
-<!-- 左の壁 -->
+<!-- 左壁 -->
 <a-box
-position="-20 5 0"
-width="0.5"
-height="10"
-depth="40"
+position="-30 6 0"
+width="1"
+height="12"
+depth="60"
 color="#ffffff">
 </a-box>
 
-<!-- 右の壁 -->
+<!-- 右壁 -->
 <a-box
-position="20 5 0"
-width="0.5"
-height="10"
-depth="40"
+position="30 6 0"
+width="1"
+height="12"
+depth="60"
 color="#ffffff">
 </a-box>
 
-<!-- ===== ゴッホ ひまわり（正面） ===== -->
+<!-- ================= -->
+<!-- ゴッホ ひまわり -->
+<!-- 正面 -->
+<!-- ================= -->
 
 <a-plane
-position="0 5 -19.7"
-width="8"
-height="6"
-src="https://upload.wikimedia.org/wikipedia/commons/thumb/4/47/Vase_with_Fifteen_Sunflowers.jpg/800px-Vase_with_Fifteen_Sunflowers.jpg">
+position="0 6 -29"
+width="10"
+height="8"
+src="https://upload.wikimedia.org/wikipedia/commons/4/47/Vase_with_Fifteen_Sunflowers.jpg">
 </a-plane>
 
 <a-text
 value="Sunflowers - Vincent van Gogh"
-position="0 2.5 -19.6"
+position="0 3 -28.8"
 align="center"
-color="black"
-width="20">
+width="30"
+color="black">
 </a-text>
 
-<!-- ===== 北斎（左壁） ===== -->
+<!-- ================= -->
+<!-- 北斎 -->
+<!-- 左壁 -->
+<!-- ================= -->
 
 <a-plane
-position="-19.7 5 0"
+position="-29 6 0"
 rotation="0 90 0"
-width="8"
-height="6"
-src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/0a/The_Great_Wave_off_Kanagawa.jpg/1024px-The_Great_Wave_off_Kanagawa.jpg">
+width="10"
+height="8"
+src="https://upload.wikimedia.org/wikipedia/commons/0/0a/The_Great_Wave_off_Kanagawa.jpg">
 </a-plane>
 
 <a-text
 value="Great Wave - Hokusai"
 rotation="0 90 0"
-position="-19.6 2.5 0"
+position="-28.8 3 0"
 align="center"
-color="black"
-width="20">
+width="30"
+color="black">
 </a-text>
 
-<!-- ===== モナリザ（右壁） ===== -->
+<!-- ================= -->
+<!-- モナリザ -->
+<!-- 右壁 -->
+<!-- ================= -->
 
 <a-plane
-position="19.7 5 0"
+position="29 6 0"
 rotation="0 -90 0"
-width="6"
-height="8"
-src="https://upload.wikimedia.org/wikipedia/commons/thumb/e/ec/Mona_Lisa.jpg/800px-Mona_Lisa.jpg">
+width="8"
+height="10"
+src="https://upload.wikimedia.org/wikipedia/commons/e/ec/Mona_Lisa.jpg">
 </a-plane>
 
 <a-text
 value="Mona Lisa - Leonardo da Vinci"
 rotation="0 -90 0"
-position="19.6 2.5 0"
+position="28.8 3 0"
 align="center"
-color="black"
-width="20">
+width="30"
+color="black">
 </a-text>
 
-<!-- ===== モネ（天井） ===== -->
+<!-- ================= -->
+<!-- モネ -->
+<!-- 天井 -->
+<!-- ================= -->
 
 <a-plane
-position="0 9.7 0"
+position="0 11.5 0"
 rotation="90 0 0"
-width="10"
-height="8"
-src="https://upload.wikimedia.org/wikipedia/commons/thumb/6/6d/Claude_Monet_-_Water_Lilies_-_1906.jpg/1024px-Claude_Monet_-_Water_Lilies_-_1906.jpg">
+width="14"
+height="10"
+src="https://upload.wikimedia.org/wikipedia/commons/6/6d/Claude_Monet_-_Water_Lilies_-_1906.jpg">
 </a-plane>
 
 <a-text
 value="Water Lilies - Claude Monet"
-position="0 9.4 0"
 rotation="90 0 0"
+position="0 11.2 0"
 align="center"
-color="black"
-width="20">
+width="30"
+color="black">
 </a-text>
 
 <!-- 光 -->
-
-<a-light type="ambient" intensity="0.9"></a-light>
+<a-light type="ambient" intensity="1"></a-light>
 
 <a-light
 type="point"
-position="0 8 0"
+position="0 10 0"
 intensity="1.2">
 </a-light>
 
