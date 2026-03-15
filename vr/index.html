@@ -1,0 +1,47 @@
+import * as THREE from 'three';
+import { XRButton } from 'three/examples/jsm/webxr/XRButton.js';
+
+// シーンとカメラ
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(70, window.innerWidth/window.innerHeight, 0.1, 10);
+camera.position.z = 2;
+
+// レンダラー
+const renderer = new THREE.WebGLRenderer({ antialias: true });
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.outputEncoding = THREE.sRGBEncoding;
+renderer.xr.enabled = true;  // VR対応
+document.body.appendChild(renderer.domElement);
+
+// VRボタンを追加
+document.body.appendChild(XRButton.createButton(renderer));
+
+// テクスチャ読み込み
+const loader = new THREE.TextureLoader();
+loader.load(
+  'https://satotakaaki0historien-rgb.github.io/ST-institut-de-recherche/vr/images/monalisa.jpg',
+  (texture) => {
+    texture.encoding = THREE.sRGBEncoding;
+    texture.flipY = false;
+
+    // ライト不要のマテリアル
+    const material = new THREE.MeshBasicMaterial({ map: texture });
+
+    // 絵を貼る平面（縦横比を合わせる）
+    const geometry = new THREE.PlaneGeometry(1, 1.5);
+    const mesh = new THREE.Mesh(geometry, material);
+    scene.add(mesh);
+
+    // VRアニメーションループ
+    renderer.setAnimationLoop(() => {
+      renderer.render(scene, camera);
+    });
+  }
+);
+
+// リサイズ対応
+window.addEventListener('resize', () => {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+});
