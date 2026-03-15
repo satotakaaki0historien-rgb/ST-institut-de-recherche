@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>VRでモナリザを見る</title>
+  <style>
+    body { margin: 0; overflow: hidden; }
+    canvas { display: block; }
+  </style>
+</head>
+<body>
+<script type="module">
+import * as THREE from 'https://cdn.jsdelivr.net/npm/three@0.164.0/build/three.module.js';
+import { XRButton } from 'https://cdn.jsdelivr.net/npm/three@0.164.0/examples/jsm/webxr/XRButton.js';
+
+const scene = new THREE.Scene();
+const camera = new THREE.PerspectiveCamera(70, window.innerWidth/window.innerHeight, 0.1, 10);
+camera.position.z = 2;
+
+const renderer = new THREE.WebGLRenderer({ antialias: true });
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.outputEncoding = THREE.sRGBEncoding;
+renderer.xr.enabled = true;
+document.body.appendChild(renderer.domElement);
+
+document.body.appendChild(XRButton.createButton(renderer));
+
+// テクスチャ
+const loader = new THREE.TextureLoader();
+loader.load(
+  'https://satotakaaki0historien-rgb.github.io/ST-institut-de-recherche/vr/images/monalisa.jpg',
+  (texture) => {
+    texture.encoding = THREE.sRGBEncoding;
+    texture.flipY = false;
+    const material = new THREE.MeshBasicMaterial({ map: texture });
+    const geometry = new THREE.PlaneGeometry(1, 1.5);
+    const mesh = new THREE.Mesh(geometry, material);
+    scene.add(mesh);
+
+    renderer.setAnimationLoop(() => {
+      renderer.render(scene, camera);
+    });
+  },
+  undefined,
+  (err) => { console.error('テクスチャ読み込みエラー', err); }
+);
+
+window.addEventListener('resize', () => {
+  camera.aspect = window.innerWidth / window.innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(window.innerWidth, window.innerHeight);
+});
+</script>
+</body>
+</html>
